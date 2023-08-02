@@ -3,15 +3,15 @@
 	timestamp,base64_user_id,coordinate,pixel_color
 	2023-07-20 18:09:49.658 UTC,1Gwttcp+9HC4YLaERXOAmAtfpBj/lD3Da9sLQSyonii/ObMqzWHbyVWVXeVvWVF3qPVIR0xB3TzYC5mOX/UL+A==,"477,268",#3690EA
 to a binary format with a 
-	8byte unix timestamp in ms, 
+	4byte delta timestamp in ms, 
 	4byte integer id, 
 	2x2 byte (short) coordinates, 
 	1byte char as color index
-	-> 17 bytes per row
+	-> 13 bytes per row
 """
 
 
-from color_palette import color_indices
+from color_palette import color_to_index
 
 from datetime import datetime
 import csv
@@ -54,7 +54,7 @@ def get_timestamp_user_color(row, mapped_user_ids, old_user_id_list):
 
 	timestamp = int(place_time.timestamp() * 1000)
 	user_id = get_short_index(row[1], mapped_user_ids, old_user_id_list)
-	color_id = color_indices[row[3]]
+	color_id = color_to_index[row[3]]
 	return timestamp, user_id, color_id
 
 def get_short_index(long_id, mapped_user_ids, old_user_id_list):
