@@ -10,6 +10,14 @@ def timestamp_to_datetime(timestamp):
 	return datetime.fromtimestamp(timestamp * 0.001)
 
 
+def get_timestamp(datetime_time):
+	return datetime_time.timestamp() * 1000
+
+
+def get_timestamp_delta(datetime_time):
+	return get_timestamp(datetime_time) - 1689858000
+
+
 def count_placed_pixels(file_path, pixel_byte_count):
 	file_size = os.path.getsize(file_path)
 	return file_size // pixel_byte_count
