@@ -1,3 +1,20 @@
+import numpy as np
+
+def convert_index_to_image_array(index_array):
+	# Get the dimensions of the input_array
+    rows, cols = index_array.shape
+    
+    # Create an all white RGB array to store the final result
+    rgb_array = np.full((rows, cols, 3), 255, dtype=np.uint8)
+    
+    # Iterate through each index in the input array and map it to RGB
+    for i in range(rows):
+        for j in range(cols):
+            index = index_array[i, j]
+            rgb_array[i, j] = index_to_color_rgb[index]
+    
+    return rgb_array
+
 
 color_to_index = {
     # day 1

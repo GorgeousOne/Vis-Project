@@ -21,26 +21,27 @@ import time
 
 
 #precompile pack method to eliminate repeated compiling?
-pack_pixel = struct.Struct("qi2hB").pack
-pack_moderation = struct.Struct("qi4hB").pack
+pack_pixel = struct.Struct("2I4hB").pack
+#pack_moderation = struct.Struct("qi4hB").pack
 
 def pixel_to_bin(row, mapped_user_ids, old_user_id_list):
 	timestamp, user_id, color_id = get_timestamp_user_color(row, mapped_user_ids, old_user_id_list)
 	x, y, *_ = row[2].split(",")
-
-	return pack_pixel(timestamp, user_id, int(x), int(y), color_id)
+	#return pack_pixel(timestamp, user_id, int(x), int(y), color_id)
+	return pack_pixel(timestamp, user_id, int(x), int(y), 0, 0, color_id)
 
 def moderation_to_bin(row, mapped_user_ids, old_user_id_list):
 	timestamp, user_id, color_id = get_timestamp_user_color(row, mapped_user_ids, old_user_id_list)
 	coords = row[2]
-
+	
 	if coords[0] == "{":
 		numbers = [int(num[3:]) for num in coords[1:-1].split(",")] + [0]
-
 	else:
 		numbers = [int(num) for num in coords.split(",")]
-	print(timestamp, user_id, *numbers, color_id)
-	return pack_moderation(timestamp, user_id, *numbers, color_id)
+		numbers[2] -= numbers[0]
+		numbers[3] -= numbers[1]
+
+	return pack_pixel(timestamp, user_id, *numbers, color_id)
 
 
 time_format = "%Y-%m-%d %H:%M:%S.%f %Z"
@@ -52,7 +53,9 @@ def get_timestamp_user_color(row, mapped_user_ids, old_user_id_list):
 	except ValueError:
 		place_time = datetime.strptime(row[0], time_format_seconds)
 
-	timestamp = int(place_time.timestamp() * 1000)
+	#timestamp = int(place_time.timestamp() * 1000)
+	timestamp = int((place_time.timestamp() - 1689850800) * 1000)
+
 	user_id = get_short_index(row[1], mapped_user_ids, old_user_id_list)
 	color_id = color_to_index[row[3]]
 	return timestamp, user_id, color_id
@@ -90,8 +93,8 @@ if __name__ == "__main__":
 	with open(destination + "user_ids.txt", "r") as f:
 		user_ids, long_user_ids = read_existing_user_ids(f)
 
-	user_ids = dict()
-	long_user_ids = []
+	# user_ids = dict()
+	# long_user_ids = []
 
 	filenames = sorted(os.listdir(origin))
 
@@ -111,22 +114,22 @@ if __name__ == "__main__":
 				if row[0][0] == "t":
 					continue
 				if row[2].count(",") > 1:
-					binary_moderations.append(moderation_to_bin(row, user_ids, long_user_ids))
+					# binary_moderations.append(moderation_to_bin(row, user_ids, long_user_ids))
+					binary_pixels.append(moderation_to_bin(row, user_ids, long_user_ids))
 				else:
 					binary_pixels.append(pixel_to_bin(row, user_ids, long_user_ids))
 
 		# appennd binary of placed pixels
-		with open(destination + '2023_place_canvas_history.bin', 'ab') as outfile:
+		with open(destination + '2023_place_canvas_history2I4hB.bin', 'ab') as outfile:
 			for pixel in binary_pixels:
 				outfile.write(pixel)
 		# append binary of moderations
-		with open(destination + '2023_place_canvas_history_moderation.bin', 'ab') as outfile_mod:
-			for moderation in binary_moderations:
-				outfile_mod.write(moderation)
+		# with open(destination + '2023_place_canvas_history_moderation.bin', 'ab') as outfile_mod:
+		# 	for moderation in binary_moderations:
+		# 		outfile_mod.write(moderation)
 		# append list of found user ids in case of program crash
 		with open(destination + 'user_ids.txt', 'a') as outfile_ids:
 			for id in long_user_ids[prevous_long_id_count:]:
 				outfile_ids.write(id + "\n")
 
 		print(f"{(time.time() - start):.2f}s")
-		break
