@@ -20,10 +20,10 @@ def main():
 	file_path = "data/test_dataset.bin"
 
 	interval = time_to_ms(8)
-	current_max_time = interval
+	interval_limit = interval
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
 	generate_circles(25)
-	print(current_max_time)
+	print(interval_limit)
 	
 	with open(file_path, 'rb') as binary_file:
 		while True:
@@ -35,10 +35,10 @@ def main():
 			# unpack pixel data with predefined format
 			timestamp, user_id, x, y, x2, y2, color_id = unpack_pixel(packed_data)
 
-			if timestamp >= current_max_time:
-				print(current_max_time)
-				save_as_image(pixel_array, f"data/timeline/place_{current_max_time}.png")
-				current_max_time += interval
+			if timestamp >= interval_limit:
+				# print(current_max_time)
+				save_as_image(pixel_array, f"data/timeline/place_{interval_limit}.png")
+				interval_limit += interval
 				
 			if x2 == 0:
 				pixel_array[y + 1000, x + 1500] = color_id
