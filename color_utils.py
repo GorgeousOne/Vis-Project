@@ -1,4 +1,12 @@
 import numpy as np
+from PIL import Image
+
+
+def save_as_image(pixel_array, path):
+	image_array = convert_index_to_image_array(pixel_array)
+	canvas = Image.fromarray(image_array)
+	canvas.save(path)
+
 
 def convert_index_to_image_array(index_array):
 	# Get the dimensions of the input_array

@@ -4,7 +4,7 @@ circle_pixels = {}
 
 
 def generate_circles(max_radius):
-    for i in range(1, max_radius):
+    for i in range(1, max_radius + 1):
         pixels = []
 
         for y in range(-i, i):

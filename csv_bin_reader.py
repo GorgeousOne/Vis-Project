@@ -3,19 +3,7 @@ import struct
 import time
 from datetime import datetime
 
-from color_palette import color_to_index
-
-
-def timestamp_to_datetime(timestamp):
-	return datetime.fromtimestamp(timestamp * 0.001)
-
-
-def get_timestamp(datetime_time):
-	return datetime_time.timestamp() * 1000
-
-
-def get_timestamp_delta(datetime_time):
-	return get_timestamp(datetime_time) - 1689850800
+from color_utils import color_to_index
 
 
 def count_placed_pixels(file_path, pixel_byte_count):

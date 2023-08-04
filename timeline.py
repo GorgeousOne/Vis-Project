@@ -3,12 +3,9 @@ import time
 import numpy as np
 from PIL import Image
 
-from color_palette import *
+from color_utils import *
+from time_utils import *
 from moderation import *
-
-
-def time_to_ms(hours, minutes=0, seconds=0):
-	return ((((hours * 60) + minutes) * 60) + seconds) * 1000
 	
 
 format = "2I4hB"
@@ -25,7 +22,7 @@ def main():
 	interval = time_to_ms(8)
 	current_max_time = interval
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
-	generate_circles(20)
+	generate_circles(25)
 	print(current_max_time)
 	
 	with open(file_path, 'rb') as binary_file:
@@ -40,9 +37,7 @@ def main():
 
 			if timestamp >= current_max_time:
 				print(current_max_time)
-				image_array = convert_index_to_image_array(pixel_array)
-				canvas = Image.fromarray(image_array)
-				canvas.save(f"data/timeline/place_{current_max_time}.png")
+				save_as_image(pixel_array, f"data/timeline/place_{current_max_time}.png")
 				current_max_time += interval
 				
 			if x2 == 0:

@@ -11,7 +11,7 @@ to a binary format with a
 """
 
 
-from color_palette import color_to_index
+from color_utils import color_to_index
 
 from datetime import datetime
 import csv
