@@ -17,7 +17,7 @@ pack_pixel = struct.Struct(format).pack
 
 
 def save_heat_image(pixel_array, frequency_array, path, brightness_scale):
-	minimum_brightness = 0.01
+	minimum_brightness = 0.07
 	image_array = convert_index_to_image_array(pixel_array)	
 	frequency_array = (frequency_array / (frequency_array + brightness_scale)) * (1 - minimum_brightness) + minimum_brightness
 	stacked_frequency_array = np.repeat(frequency_array [:, :, None], 3, axis=2) 
@@ -27,7 +27,7 @@ def save_heat_image(pixel_array, frequency_array, path, brightness_scale):
 
 def main():
 	start = time.time()
-	generate_circles(25)
+	generate_circles(500)
 
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
 	frequency_array = np.zeros((2000, 3000), dtype=np.uint32)
@@ -63,6 +63,7 @@ def main():
 				place_moderation(pixel_array, x, y, x2, y2, color_id)	
 
 
+	save_heat_image(pixel_array, frequency_array, f"data/heatmap/heat_{interval_limit}.png", brightness_scale)
 	print(f"iteration time {(time.time() - start):.1f}")
 	start = time.time()
 

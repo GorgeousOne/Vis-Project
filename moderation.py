@@ -31,4 +31,7 @@ def place_circle(canvas: np.ndarray, x_min, y_min, radius, color_id) -> None:
     x = x_min + 1500
     y = y_min + 1000
     for dy, dx in circle_pixels[radius]:
-        canvas[y + dy, x + dx] = color_id
+        try:
+            canvas[y + dy, x + dx] = color_id
+        except:
+            None
