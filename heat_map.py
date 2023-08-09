@@ -27,7 +27,6 @@ def save_heat_image(pixel_array, frequency_array, path, brightness_scale):
 
 def main():
 	start = time.time()
-	generate_circles(500)
 
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
 	frequency_array = np.zeros((2000, 3000), dtype=np.uint32)
