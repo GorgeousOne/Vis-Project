@@ -40,7 +40,7 @@ def main():
 
 			if timestamp >= interval_limit:
 				print(interval_limit)
-				save_as_image_paletted(pixel_array, f"{target}/place_{timestamp_delta_to_str(interval_limit)}.png")
+				save_as_image_paletted(pixel_array, f"{target}/place_{timestamp_to_str(interval_limit)}.png")
 				interval_limit += interval
 
 			if x2 == 0:
@@ -48,7 +48,7 @@ def main():
 			else:
 				place_moderation(pixel_array, x, y, x2, y2, color_id)
 
-	save_as_image_paletted(pixel_array, f"{target}/place_{timestamp_delta_to_str(interval_limit)}.png")
+	save_as_image_paletted(pixel_array, f"{target}/place_{timestamp_to_str(interval_limit)}.png")
 	print(f"iteration time {(time.time() - start):.1f}")
 
 

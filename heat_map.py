@@ -51,7 +51,7 @@ def main():
 
 			if timestamp >= interval_limit:
 				# print(current_max_time)
-				save_heat_image(pixel_array, frequency_array, f"data/heatmap/heat_{interval_limit}.png", brightness_scale)
+				save_heat_image(pixel_array, frequency_array, f"data/heatmap/heat_{timestamp_to_str(interval_limit)}.png", brightness_scale)
 				interval_limit += interval
 				frequency_array.fill(0)
 
@@ -62,7 +62,7 @@ def main():
 				place_moderation(pixel_array, x, y, x2, y2, color_id)	
 
 
-	save_heat_image(pixel_array, frequency_array, f"data/heatmap/heat_{interval_limit}.png", brightness_scale)
+	save_heat_image(pixel_array, frequency_array, f"data/heatmap/heat_{timestamp_to_str(interval_limit)}.png", brightness_scale)
 	print(f"iteration time {(time.time() - start):.1f}")
 	start = time.time()
 
