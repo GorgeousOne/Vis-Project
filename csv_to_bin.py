@@ -38,8 +38,8 @@ def moderation_to_bin(row, mapped_user_ids, old_user_id_list):
 		numbers = [int(num[3:]) for num in coords[1:-1].split(",")] + [0]
 	else:
 		numbers = [int(num) for num in coords.split(",")]
-		numbers[2] -= numbers[0]
-		numbers[3] -= numbers[1]
+		numbers[2] -= numbers[0] - 1
+		numbers[3] -= numbers[1] - 1
 
 	return pack_pixel(timestamp, user_id, *numbers, color_id)
 
@@ -87,7 +87,7 @@ def read_existing_user_ids(file):
 
 if __name__ == "__main__":
 	origin = "data/csv/"
-	destination = "data/"
+	destination = "data/test/"
 
 	# read already found user ids in case of program crash in the middle
 	with open(destination + "user_ids.txt", "r") as f:
