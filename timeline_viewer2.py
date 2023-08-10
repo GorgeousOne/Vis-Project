@@ -3,38 +3,43 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from PIL import Image
 
-# Define the folder containing images
-image_folder = 'data/real_timeline'
+class TimelineViewer:
 
-# Get a list of image file names in the folder
-image_files = [f for f in os.listdir(image_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp'))]
+	def __init__(self, image_folder):
+		self.image_folder = image_folder
+		self.image_arrays = []
+		self.current_index = 0
+		self.canvas = None
 
-# Initialize variables
-current_index = 0
-num_images = len(image_files)
+		self._preload_images()
+		self._show()
 
-# Create a function to update the displayed image
-def update_image(val):
-    global current_index
-    current_index = int(val)
-    img_path = os.path.join(image_folder, image_files[current_index])
-    img = Image.open(img_path)
-    ax.imshow(img)
-    fig.canvas.draw()
+	def _preload_images(self):
+		# Get a list of image file names in the folder
+		image_files = [f for f in os.listdir(self.image_folder) if f.lower().endswith(('.png'))]
+		self.image_arrays = [Image.open(os.path.join(self.image_folder, f)) for f in image_files]
+		print("loaded images")
 
-# Create the figure and axes
-fig, ax = plt.subplots()
-plt.subplots_adjust(bottom=0.25)
+	# Create a function to update the displayed image
+	def update_image(self, val):
+		self.current_index = int(val)
+		self.canvas.set_data(self.image_arrays[self.current_index])
 
-# Load and display the initial image
-initial_img_path = os.path.join(image_folder, image_files[current_index])
-initial_img = Image.open(initial_img_path)
-ax.imshow(initial_img)
+	def _show(self):
+		fig, ax = plt.subplots()
+		plt.subplots_adjust(bottom=0.25)
 
-# Create a slider
-ax_slider = plt.axes([0.2, 0.02, 0.65, 0.03], facecolor='lightgoldenrodyellow')
-slider = Slider(ax_slider, 'Image', 0, num_images - 1, valinit=current_index, valstep=1)
-slider.on_changed(update_image)
+		# display the initial image
+		self.canvas = ax.imshow(self.image_arrays[self.current_index])
+		# Create a slider
+		num_images = len(self.image_arrays)
+		ax_slider = plt.axes([0.2, 0.02, 0.65, 0.03], facecolor='lightgoldenrodyellow')
+		slider = Slider(ax_slider, 'Image', 0, num_images - 1, valinit=self.current_index, valstep=1)
+		slider.on_changed(self.update_image)
 
-# Display the plot
-plt.show()
+		# Display the plot
+		plt.show()
+
+
+if __name__ == "__main__":
+	TimelineViewer("data/real_timeline")
