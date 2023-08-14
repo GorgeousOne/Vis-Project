@@ -16,7 +16,7 @@ if __name__ == "__main__":
 	# file_path = "./data/test_dataset.bin"
 	out_path = "./data/color_frequencies.csv"
 
-	if os.path.getsize(out_path) != 0:
+	if os.path.exists(out_path) and os.path.getsize(out_path) != 0:
 		print(f"won't write to {out_path} unless file is empty. for your safety.")
 		exit()
 
