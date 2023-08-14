@@ -1,28 +1,10 @@
 import os
 import struct
 import time
-from datetime import datetime
-
-from color_utils import color_to_index
-
 
 def count_placed_pixels(file_path, pixel_byte_count):
 	file_size = os.path.getsize(file_path)
 	return file_size // pixel_byte_count
-
-
-def get_color_frequency(binary_file):
-	occurences = [0 for i in range(len(color_to_index))]
-	unpack_color = struct.Struct("B").unpack_from
-	
-	while True:
-		packed_data = binary_file.read(13)
-
-		if not packed_data:
-			break
-		color_idx = unpack_color(packed_data, 12)[0]
-		occurences[color_idx] += 1
-	print(occurences)
 
 
 def create_test_dataset(binary_file):
