@@ -37,7 +37,7 @@ def main():
 	interval = time_to_ms(1)
 	interval_limit = interval
 
-	brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 0.7
+	brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 1
 
 	with open(file_path, 'rb') as binary_file:
 		while True:

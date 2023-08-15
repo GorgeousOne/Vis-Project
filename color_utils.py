@@ -1,6 +1,23 @@
 import numpy as np
+import colorsys
 from PIL import Image
 
+def thermal_color_mapping(value):
+    hue = (262 - ((262 - 255) * value)) / 360.0
+    return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+
+def replace_with_thermal_colors(input_array):
+    height, width, depth = input_array.shape
+    result_array = np.zeros((height, width, 3), dtype=np.uint8)
+
+    for i in range(0, height, 3):
+        for j in range(0, width, 3):
+            r, g, b = thermal_color_mapping(input_array[i, j, 0])
+            result_array[i:i+3, j:j+3, 0] = int(r * 255)
+            result_array[i:i+3, j:j+3, 1] = int(g * 255)
+            result_array[i:i+3, j:j+3, 2] = int(b * 255)
+
+    return result_array
 
 def save_as_image_paletted(pixel_array, path):
 	canvas = Image.fromarray(pixel_array, mode="P")
