@@ -20,7 +20,7 @@ def save_thermal_image(pixel_array, frequency_array, path, brightness_scale):
 	minimum_brightness = 0.0
 	#image_array = convert_index_to_image_array(pixel_array)	
 	frequency_array = (frequency_array / (frequency_array + brightness_scale)) * (1 - minimum_brightness) + minimum_brightness
-	stacked_frequency_array = np.repeat(frequency_array [:, :, None], 3, axis=2) * 255
+	stacked_frequency_array = frequency_array * 255
 	thermal_map = stacked_frequency_array.astype(np.uint8)
 	thermal_map = replace_with_thermal_colors(thermal_map)
 	canvas = Image.fromarray(thermal_map)

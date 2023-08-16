@@ -12,15 +12,16 @@ def greyscale_to_color(greyscale):
     return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
 
 def replace_with_thermal_colors(input_array):
-    height, width, depth = input_array.shape
+    # Returns new array with thermal color values that replace the greyscale values from input array
+    height, width = input_array.shape
     result_array = np.zeros((height, width, 3), dtype=np.uint8)
 
-    for i in range(0, height, 3):
-        for j in range(0, width, 3):
-            r, g, b = greyscale_to_color(input_array[i, j, 0])
-            result_array[i:i+3, j:j+3, 0] = int(r * 255)
-            result_array[i:i+3, j:j+3, 1] = int(g * 255)
-            result_array[i:i+3, j:j+3, 2] = int(b * 255)
+    for i in range(0, height):
+        for j in range(0, width):
+            r, g, b = greyscale_to_color(input_array[i, j])
+            result_array[i, j, 0] = int(r * 255)
+            result_array[i, j, 1] = int(g * 255)
+            result_array[i, j, 2] = int(b * 255)
 
     return result_array
 
