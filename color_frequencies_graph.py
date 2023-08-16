@@ -12,7 +12,7 @@ df = pd.DataFrame(data)
 area_colors = tuple(data.columns)
 # creates stacked area plot with custom colors, no legend and 0 line width
 ax = df.plot.area(title="Use of colors over time", color=area_colors, legend=False, lw=0)
-plt.tight_layout()
+plt.tight_layout(rect=(0, 0.05, 1, 1))
 
 # draw y lines below graph
 ax.grid(axis='y')
@@ -23,7 +23,7 @@ def format_large_number(y, pos):
     return f'{y:,.0f}'
 
 def format_time(y, pos):
-    return datetime.fromtimestamp(y * 0.001 + PLACE_START).strftime("%d.%#m.  %#I%p")
+    return datetime.utcfromtimestamp(y * 0.001 + PLACE_START).strftime("%d.%#m.  %#I%p")
 
 
 # convert x ticks from ms to datetime
@@ -34,14 +34,14 @@ ax.yaxis.set_minor_locator(ticker.MultipleLocator(1e5))
 plt.xticks(df.index, rotation=90)
 
 ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_time))
-ax.xaxis.set_major_locator(ticker.MultipleLocator(time_to_ms(6)))
+ax.xaxis.set_major_locator(ticker.IndexLocator(time_to_ms(6), time_to_ms(0)))
 ax.xaxis.set_minor_locator(ticker.MultipleLocator(time_to_ms(1)))
 
 plt.xlabel('Time')
 plt.ylabel('Placed pixels')
 
 # highlight every nth tick (maybe highlight new days?)
-for label in ax.get_xticklabels()[3::4]:
+for label in ax.get_xticklabels()[2::4]:
     label.set_fontweight('bold')
 
 
