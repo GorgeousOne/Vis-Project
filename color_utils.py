@@ -2,8 +2,13 @@ import numpy as np
 import colorsys
 from PIL import Image
 
-def thermal_color_mapping(value):
-    hue = (262 - ((262 - 255) * value)) / 360.0
+def greyscale_to_color(greyscale):
+    # Input: Greyscale value between 0 and 255.
+	# Output: RGB color mapped on thermal color scale
+	# Calculates position of greyscale on color scale by positioning the greyscale value on the hue value of HSV color model
+	# 262 equals the dark violet value which represents no activity in this pixel. Subtracts greyscale value from this to get activity
+    # ((262 - 255) * greyscale): Multiply greyscale value so that 255 gets equal to 262 so that we can use the full color scale
+    hue = (262 - ((262 - 255) * greyscale)) / 360.0
     return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
 
 def replace_with_thermal_colors(input_array):
@@ -12,7 +17,7 @@ def replace_with_thermal_colors(input_array):
 
     for i in range(0, height, 3):
         for j in range(0, width, 3):
-            r, g, b = thermal_color_mapping(input_array[i, j, 0])
+            r, g, b = greyscale_to_color(input_array[i, j, 0])
             result_array[i:i+3, j:j+3, 0] = int(r * 255)
             result_array[i:i+3, j:j+3, 1] = int(g * 255)
             result_array[i:i+3, j:j+3, 2] = int(b * 255)
