@@ -23,7 +23,7 @@ def main():
 	if not os.path.exists(target):
 		os.makedirs(target)
 
-	interval = time_to_ms(1)
+	interval = time_to_ms(0, 5)
 	interval_limit = interval
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
 	

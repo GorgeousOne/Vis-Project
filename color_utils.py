@@ -3,13 +3,13 @@ import colorsys
 from PIL import Image
 
 def greyscale_to_color(greyscale):
-    # Input: Greyscale value between 0 and 255.
+    # Input: Greyscale value between 0 and 1
 	# Output: RGB color mapped on thermal color scale
-	# Calculates position of greyscale on color scale by positioning the greyscale value on the hue value of HSV color model
-	# 262 equals the dark violet value which represents no activity in this pixel. Subtracts greyscale value from this to get activity
-    # ((262 - 255) * greyscale): Multiply greyscale value so that 255 gets equal to 262 so that we can use the full color scale
-    hue = (262 - ((262 - 255) * greyscale)) / 360.0
-    return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+	start_hue = 262
+	end_hue = 0
+	hue = start_hue + (end_hue - start_hue) * greyscale
+	hue /= 360.0
+	return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
 
 def replace_with_thermal_colors(input_array):
     # Returns new array with thermal color values that replace the greyscale values from input array

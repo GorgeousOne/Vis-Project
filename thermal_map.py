@@ -20,9 +20,9 @@ def save_thermal_image(pixel_array, frequency_array, path, brightness_scale):
 	minimum_brightness = 0.0
 	#image_array = convert_index_to_image_array(pixel_array)	
 	frequency_array = (frequency_array / (frequency_array + brightness_scale)) * (1 - minimum_brightness) + minimum_brightness
-	stacked_frequency_array = frequency_array * 255
-	thermal_map = stacked_frequency_array.astype(np.uint8)
-	thermal_map = replace_with_thermal_colors(thermal_map)
+	#stacked_frequency_array = frequency_array * 255
+	#thermal_map = stacked_frequency_array.astype(np.uint8)
+	thermal_map = replace_with_thermal_colors(frequency_array)
 	canvas = Image.fromarray(thermal_map)
 	canvas.save(path)
 
@@ -35,10 +35,11 @@ def main():
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
 	#file_path = "data/test_dataset.bin"
 
-	interval = time_to_ms(1)
+	interval = time_to_ms(0, 5)
 	interval_limit = interval
 
-	brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 1.1
+	#brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 0.2
+	brightness_scale = 2
 
 	with open(file_path, 'rb') as binary_file:
 		while True:

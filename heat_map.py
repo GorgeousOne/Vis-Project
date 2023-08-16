@@ -34,10 +34,11 @@ def main():
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
 	#file_path = "data/test_dataset.bin"
 
-	interval = time_to_ms(1)
+	interval = time_to_ms(0, 5)
 	interval_limit = interval
 
-	brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 1
+	# brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 1
+	brightness_scale = 17
 
 	with open(file_path, 'rb') as binary_file:
 		while True:
