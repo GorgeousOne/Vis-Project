@@ -11,7 +11,7 @@ def timestamp_to_str(timestamp, is_delta=True):
 
 
 def get_timestamp(datetime_time, as_delta=True):
-	return datetime_time.timestamp() * 1000 - PLACE_START if as_delta else 0
+	return int((datetime_time.timestamp() - PLACE_START if as_delta else 0) * 1000)
 
 
 def time_to_ms(hours, minutes=0, seconds=0):
