@@ -1,6 +1,6 @@
 from datetime import datetime
 
-PLACE_START = 1689850800
+PLACE_START = 1689858000
 
 def timestamp_to_datetime(timestamp, is_delta=True):
 	return datetime.fromtimestamp(timestamp * 0.001 + PLACE_START if is_delta else 0)
