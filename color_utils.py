@@ -3,27 +3,39 @@ import colorsys
 from PIL import Image
 
 def greyscale_to_color(greyscale):
-    # Input: Greyscale value between 0 and 1
+	# Input: Greyscale value between 0 and 1
 	# Output: RGB color mapped on thermal color scale
 	start_hue = 262
 	end_hue = 0
 	hue = start_hue + (end_hue - start_hue) * greyscale
 	hue /= 360.0
-	return colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+	r, g, b = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+	return int(r*255), int(g*255), int(b*255)
 
-def replace_with_thermal_colors(input_array):
-    # Returns new array with thermal color values that replace the greyscale values from input array
-    height, width = input_array.shape
-    result_array = np.zeros((height, width, 3), dtype=np.uint8)
+thermal_colors = {}
 
-    for i in range(0, height):
-        for j in range(0, width):
-            r, g, b = greyscale_to_color(input_array[i, j])
-            result_array[i, j, 0] = int(r * 255)
-            result_array[i, j, 1] = int(g * 255)
-            result_array[i, j, 2] = int(b * 255)
+def inv_scale(frequency):
+	return  frequency / (frequency + 3)
 
-    return result_array
+def generate_thermal_colo(frequency):
+	thermal_colors[frequency] = greyscale_to_color(inv_scale(frequency))
+
+def replace_with_thermal_colors(frequencies):
+	# Returns new array with thermal color values that replace the greyscale values from input array
+	height, width = frequencies.shape
+	result_array = np.zeros((height, width, 3), dtype=np.uint8)
+
+	for i in range(0, height):
+		for j in range(0, width):
+			val = frequencies[i, j]
+			if not val in thermal_colors:
+				generate_thermal_colo(val)
+			r, g, b = thermal_colors[val]
+			result_array[i, j, 0] = r
+			result_array[i, j, 1] = g
+			result_array[i, j, 2] = b
+
+	return result_array
 
 def save_as_image_paletted(pixel_array, path):
 	canvas = Image.fromarray(pixel_array, mode="P")

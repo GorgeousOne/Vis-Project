@@ -20,8 +20,8 @@ def main():
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
 	#file_path = "data/test_dataset.bin"
 
-	start = get_timestamp(datetime(2023, 7, 24, hour=17, tzinfo=timezone.utc))
-	end = get_timestamp(datetime(2023, 7, 24, hour=18, tzinfo=timezone.utc))
+	start = get_timestamp(datetime(2023, 7, 24, hour=19, tzinfo=timezone.utc))
+	end = get_timestamp(datetime(2023, 7, 24, hour=20, tzinfo=timezone.utc))
 
 	with open(file_path, 'rb') as binary_file:
 		binary_file.seek(98571987 * buffer_size)
