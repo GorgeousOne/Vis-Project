@@ -32,7 +32,7 @@ def main():
 
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
 	#file_path = "data/test_dataset.bin"
-	target = "data/thermal_map"
+	target = "data/thermal_map2"
 
 	if not os.path.exists(target):
 		os.makedirs(target)

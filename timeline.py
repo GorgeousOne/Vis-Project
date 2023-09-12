@@ -18,7 +18,7 @@ def main():
 
 	#file_path = "./data/2023_place_canvas_history_2i2hB.bin"
 	file_path = "data/2023_place_canvas_history_2I4hB.bin"
-	target = "data/real_timeline2"
+	target = "data/default"
 
 	if not os.path.exists(target):
 		os.makedirs(target)
@@ -26,7 +26,7 @@ def main():
 	interval = time_to_ms(0, 5)
 	interval_limit = interval
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
-	
+	i = 0
 
 	with open(file_path, 'rb') as binary_file:
 		while True:
@@ -39,7 +39,8 @@ def main():
 			timestamp, user_id, x, y, x2, y2, color_id = unpack_pixel(packed_data)
 
 			if timestamp >= interval_limit:
-				print(interval_limit)
+				print(f"{i/1543 * 100:.2f}%, {(time.time() - start):.1f}s")
+				i += 1
 				save_as_image_paletted(pixel_array, f"{target}/place_{timestamp_to_str(interval_limit)}.png")
 				interval_limit += interval
 

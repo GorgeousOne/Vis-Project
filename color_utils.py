@@ -15,7 +15,7 @@ def greyscale_to_color(greyscale):
 thermal_colors = {}
 
 def inv_scale(frequency):
-	return  frequency / (frequency + 3)
+	return  frequency / (frequency + 9)
 
 def generate_thermal_colo(frequency):
 	thermal_colors[frequency] = greyscale_to_color(inv_scale(frequency))
