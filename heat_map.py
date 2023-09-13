@@ -16,7 +16,7 @@ pack_pixel = struct.Struct(format).pack
 
 def save_heat_image(pixel_array, frequency_array, path):
 	minimum_brightness = 0.07
-	brightness_scale = 8
+	brightness_scale = 9
 
 	image_array = convert_index_to_image_array(pixel_array)	
 	frequency_array = (frequency_array / (frequency_array + brightness_scale)) * (1 - minimum_brightness) + minimum_brightness
@@ -29,11 +29,13 @@ def main():
 	start = time.time()
 
 	pixel_array = np.zeros((2000, 3000), dtype=np.uint8)
+	frequency_sum = np.zeros((2000, 3000), dtype=np.uint32)
 	frequency_array = np.zeros((2000, 3000), dtype=np.uint32)
+	freq_stack = []
 
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
 	#file_path = "data/test_dataset.bin"
-	target = "data/heatmap"
+	target = "data/heatmap4"
 
 	if not os.path.exists(target):
 		os.makedirs(target)
@@ -41,8 +43,6 @@ def main():
 	interval = time_to_ms(0, 5)
 	interval_limit = interval
 	i = 0
-
-	# brightness_scale = bin_r.count_placed_pixels(file_path, buffer_size) / 6000000 * 1
 
 	with open(file_path, 'rb') as binary_file:
 		while True:
@@ -57,7 +57,13 @@ def main():
 			if timestamp >= interval_limit:
 				print(f"{i/1543 * 100:.2f}%, {(time.time() - start):.1f}s")
 				i += 1
-				save_heat_image(pixel_array, frequency_array, f"{target}/heat_{timestamp_to_str(interval_limit)}.png")
+
+				frequency_sum += frequency_array
+				freq_stack.append(frequency_array.copy())
+				if (len(freq_stack) > 12):
+						frequency_sum -= freq_stack.pop(0)
+
+				save_heat_image(pixel_array, frequency_sum, f"{target}/heat_{timestamp_to_str(interval_limit)}.png")
 				interval_limit += interval
 				frequency_array.fill(0)
 

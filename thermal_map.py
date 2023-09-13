@@ -17,10 +17,6 @@ pack_pixel = struct.Struct(format).pack
 
 
 def save_thermal_image(frequency_array, path):
-	#image_array = convert_index_to_image_array(pixel_array)	
-	#frequency_array = (2 * frequency_array / (frequency_array + 1)) - 1
-	#stacked_frequency_array = frequency_array * 255
-	#thermal_map = stacked_frequency_array.astype(np.uint8)
 	thermal_map = replace_with_thermal_colors(frequency_array)
 	canvas = Image.fromarray(thermal_map)
 	canvas.save(path)
@@ -28,10 +24,11 @@ def save_thermal_image(frequency_array, path):
 def main():
 	start = time.time()
 
+	frequency_stack = []
 	frequency_array = np.zeros((2000, 3000), dtype=np.uint32)
+	frequency_sum = np.zeros((2000, 3000), dtype=np.uint32)
 
 	file_path = "./data/2023_place_canvas_history_2I4hB.bin"
-	#file_path = "data/test_dataset.bin"
 	target = "data/thermal_map2"
 
 	if not os.path.exists(target):
@@ -56,8 +53,14 @@ def main():
 			if timestamp >= interval_limit:
 				print(f"{i/1543 * 100:.2f}%, {(time.time() - start):.1f}s")
 				i += 1
-				save_thermal_image(frequency_array, f"{target}/thermal_{timestamp_to_str(interval_limit)}.png")
 				interval_limit += interval
+				frequency_sum += frequency_array
+				frequency_stack.append(frequency_array.copy())
+
+				if (len(frequency_stack) > 12):
+					frequency_sum -= frequency_stack.pop(0)
+
+				save_thermal_image(frequency_sum, f"{target}/thermal_{timestamp_to_str(interval_limit)}.png")
 				frequency_array.fill(0)
 
 			if x2 == 0:
